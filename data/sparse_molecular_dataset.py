@@ -9,7 +9,7 @@ from datetime import datetime
 
 class SparseMolecularDataset():
 
-    def load(self, filename, subset=1):
+    def load(self, filename, subset=0.1):
 
         with open(filename, 'rb') as f:
             self.__dict__.update(pickle.load(f))
