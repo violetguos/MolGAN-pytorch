@@ -3,6 +3,7 @@ import argparse
 from solver import Solver
 from data_loader import get_loader
 from torch.backends import cudnn
+import json
 
 
 def str2bool(v):
@@ -79,5 +80,8 @@ if __name__ == '__main__':
     parser.add_argument('--lr_update_step', type=int, default=1000)
 
     config = parser.parse_args()
+    with open('commandline_args.json', 'r') as f:
+        json.load(config.__dict__, f, indent=2)
     print(config)
-    main(config)
+    
+    # main(config)

@@ -21,53 +21,172 @@ class Solver(object):
 
         # Data loader.
         self.data = SparseMolecularDataset()
-        self.data.load(config.mol_data_dir)
+
+        if 'mol_data_dir' in config:
+            self.data.load(config['mol_data_dir'])
+        else:
+            self.data.load('data/gdb9_9nodes.sparsedataset')
 
         # Model configurations.
-        self.z_dim = config.z_dim
+        if 'z_dim' in config:
+            self.z_dim = config['z_dim']
+        else:
+            self.z_dim = 8
+
         self.m_dim = self.data.atom_num_types
         self.b_dim = self.data.bond_num_types
-        self.g_conv_dim = config.g_conv_dim
-        self.d_conv_dim = config.d_conv_dim
-        self.g_repeat_num = config.g_repeat_num
-        self.d_repeat_num = config.d_repeat_num
-        self.lambda_cls = config.lambda_cls
-        self.lambda_rec = config.lambda_rec
-        self.lambda_gp = config.lambda_gp
-        self.post_method = config.post_method
+        
+        if 'g_conv_dim' in config:
+            self.g_conv_dim = config['g_conv_dim']
+        else:
+            self.g_conv_dim = [128, 256, 512]
+
+        if 'd_conv_dim' in config:
+
+            self.d_conv_dim = config['d_conv_dim']
+        else:
+            self.d_conv_dim = [[128, 64], 128, [128, 64]]
+
+        if 'g_repeat_num' in config:
+            self.g_repeat_num = config['g_repeat_num']
+        else:
+            self.g_repeat_num = 6
+
+        if 'd_repeat_num' in config:
+            self.d_repeat_num = config['d_repeat_num']
+        else:
+            self.d_repeat_num = 6
+
+        if 'lambda_cls' in config:
+            self.lambda_cls = config['lambda_cls']
+        else:
+            self.lambda_cls = 1
+
+        if 'lambda_rec' in config:
+            self.lambda_rec = config['lambda_rec']
+        else:
+            self.lambda_rec = 10
+
+        if 'lambda_gp' in config:
+            self.lambda_gp = config['lambda_gp']
+        else:
+            self.lambda_gp = 10
+
+        if 'post_method' in config:
+            self.post_method = config['post_method']
+        else:
+            self.post_method = 'softmax'
+
 
         self.metric = 'validity,sas'
 
         # Training configurations.
-        self.batch_size = config.batch_size
-        self.num_iters = config.num_iters
-        self.num_iters_decay = config.num_iters_decay
-        self.g_lr = config.g_lr
-        self.d_lr = config.d_lr
-        self.dropout = config.dropout
-        self.n_critic = config.n_critic
-        self.beta1 = config.beta1
-        self.beta2 = config.beta2
-        self.resume_iters = config.resume_iters
+
+        if 'batch_size' in config:
+            self.batch_size = config['batch_size']
+        else:
+            self.batch_size = 16
+
+        if 'num_iters' in config:
+            self.num_iters = config['num_iters']
+        else:
+            self.num_iters = 20
+
+        if 'num_iters_decay' in config:
+            self.num_iters_decay = config['num_iters_decay']
+        else:
+            self.num_iters_decay = 10
+
+        if 'g_lr' in config:
+            self.g_lr = config['g_lr']
+        else:
+            self.g_lr = 0.0001
+
+        if 'd_lr' in config:
+            self.d_lr = config['d_lr']
+        else:
+            self.d_lr = 0.0001
+
+        if 'dropout' in config:
+            self.dropout = config['dropout']
+        else:
+            self.dropout = 0.
+
+        if 'n_critic' in config:
+            self.n_critic = config['n_critic']
+        else:
+            self.n_critic = 5
+
+        if 'beta1' in config:
+            self.beta1 = config['beta1']
+        else:
+            self.beta1 = 0.5
+
+        if 'beta2' in config:
+            self.beta2 = config['beta2']
+        else:
+            self.beta2 = 0.999
+
+        if 'resume_iters' in config:
+            self.resume_iters = config['resume_iters']
+        else:
+            self.resume_iters = None
 
         # Test configurations.
-        self.test_iters = config.test_iters
+        if 'test_iters' in config:
+            self.test_iters = config['test_iters']
+        else:
+            self.test_iters = 20
 
         # Miscellaneous.
-        self.use_tensorboard = config.use_tensorboard
+        if 'use_tensorboard' in config:
+            self.use_tensorboard = config['use_tensorboard']
+        else:
+            self.use_tensorboard = False
+
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         # Directories.
-        self.log_dir = config.log_dir
-        self.sample_dir = config.sample_dir
-        self.model_save_dir = config.model_save_dir
-        self.result_dir = config.result_dir
+        if 'log_dir' in config:
+            self.log_dir = config['log_dir']
+        else:
+            self.log_dir = 'molgan/logs'
+
+        if 'sample_dir' in config:
+            self.sample_dir = config['sample_dir']
+        else:
+            self.sample_dir = 'molgan/samples'
+
+        if 'model_save_dir' in config:
+            self.model_save_dir = config['model_save_dir']
+        else:
+            self.model_save_dir = 'molgan/models'
+
+        if 'result_dir' in config:
+            self.result_dir = config['result_dir']
+        else:
+            self.result_dir = 'molgan/results'
 
         # Step size.
-        self.log_step = config.log_step
-        self.sample_step = config.sample_step
-        self.model_save_step = config.model_save_step
-        self.lr_update_step = config.lr_update_step
+        if 'log_step' in config:
+            self.log_step = config['log_step']
+        else:
+            self.log_step = 10
+
+        if 'sample_step' in config:
+            self.sample_step = config['sample_step']
+        else:
+            self.sample_step = 1000
+
+        if 'model_save_step' in config:
+            self.model_save_step = config['model_save_step']
+        else:
+            self.model_save_step = 10
+
+        if 'lr_update_step' in config:
+            self.lr_update_step = config['lr_update_step']
+        else:
+            self.lr_update_step = 1000
 
         # Build the model and tensorboard.
         self.build_model()
