@@ -58,7 +58,7 @@ if __name__ == '__main__':
     parser.add_argument('--resume_iters', type=int, default=None, help='resume training from this step')
 
     # Test configuration.
-    parser.add_argument('--test_iters', type=int, default=2, help='test model from this step')
+    parser.add_argument('--test_iters', type=int, default=20, help='test model from this step')
 
     # Miscellaneous.
     parser.add_argument('--num_workers', type=int, default=1)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     # Step size.
     parser.add_argument('--log_step', type=int, default=10)
     parser.add_argument('--sample_step', type=int, default=1000)
-    parser.add_argument('--model_save_step', type=int, default=10000)
+    parser.add_argument('--model_save_step', type=int, default=10)
     parser.add_argument('--lr_update_step', type=int, default=1000)
 
     config = parser.parse_args()

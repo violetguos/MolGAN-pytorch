@@ -370,7 +370,7 @@ class Solver(object):
         with torch.no_grad():
             mols, _, _, a, x, _, _, _, _ = self.data.next_test_batch()
             z = self.sample_z(a.shape[0])
-
+            z = torch.tensor(z, dtype=torch.float)
             # Z-to-target
             edges_logits, nodes_logits = self.G(z)
             # Postprocess with Gumbel softmax
@@ -386,7 +386,8 @@ class Solver(object):
 
             # Log update
             m0, m1 = all_scores(mols, self.data, norm=True)     # 'mols' is output of Fake Reward
-            m0 = {k: np.array(v)[np.nonzero(v)].mean() for k, v in m0.items()}
+            m0 = {k: torch.tensor(np.array(v)[np.nonzero(v)], dtype=torch.float).mean() for k, v in m0.items()}
             m0.update(m1)
+            log = " "
             for tag, value in m0.items():
                 log += ", {}: {:.4f}".format(tag, value)
