@@ -482,6 +482,18 @@ class Solver(object):
                 print ('Decayed learning rates, g_lr: {}, d_lr: {}.'.format(g_lr, d_lr))
 
 
+    def save(self):
+        """
+        Additional functio in the orginal code, inorder to call save in wrapper
+        """
+        G_path = os.path.join(self.model_save_dir, '{}-G.ckpt'.format('out_of_train_loop'))
+        D_path = os.path.join(self.model_save_dir, '{}-D.ckpt'.format('out_of_train_loop'))
+        V_path = os.path.join(self.model_save_dir, '{}-V.ckpt'.format('out_of_train_loop'))
+        torch.save(self.G.state_dict(), G_path)
+        torch.save(self.D.state_dict(), D_path)
+        torch.save(self.V.state_dict(), V_path)       
+
+
     def test(self):
         # Load the trained generator.
         self.restore_model(self.test_iters)
