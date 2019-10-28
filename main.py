@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     # Miscellaneous.
     parser.add_argument('--num_workers', type=int, default=1)
-    parser.add_argument('--mode', type=str, default='train', choices=['train', 'test'])
+    parser.add_argument('--mode', type=str, default='test', choices=['train', 'test'])
     parser.add_argument('--use_tensorboard', type=str2bool, default=False)
 
     # Directories.
@@ -80,8 +80,8 @@ if __name__ == '__main__':
     parser.add_argument('--lr_update_step', type=int, default=1000)
 
     config = parser.parse_args()
-    with open('commandline_args.json', 'r') as f:
-        json.load(config.__dict__, f, indent=2)
-    print(config)
+    # with open('commandline_args.json', 'r') as f:
+    #     json.load(config.__dict__, f, indent=2)
+    # print(config)
     
-    # main(config)
+    main(config)

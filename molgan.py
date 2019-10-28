@@ -34,5 +34,5 @@ class Molgan():
 if __name__ == '__main__':
     #Debug
     molgan = Molgan()
-    molgan.train()
     #molgan.train()
+    molgan.test()
